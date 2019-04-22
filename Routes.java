@@ -1,3 +1,4 @@
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.telegram.TelegramConstants;
 import org.apache.camel.component.telegram.TelegramParseMode;
@@ -8,6 +9,7 @@ public class Routes extends RouteBuilder {
 
         // Take all messages that are sent to our BOT
         from("telegram:bots/{{token}}")
+                .to("log:DEBUG?showBody=true&showHeaders=true")
                 // Just focus on the textual message
                 .convertBodyTo(String.class)
                 .choice()
@@ -24,7 +26,7 @@ public class Routes extends RouteBuilder {
 
         from("direct:chuck")
                 // Let's use a circuit breaker to avoid cascading failures
-                .hystrix().hystrixConfiguration().executionTimeoutInMilliseconds(1000).end()
+                .hystrix().hystrixConfiguration().executionTimeoutInMilliseconds(2000).end()
                     // When a user writes the word 'chuck' on the chat execute the following steps
                     .to("http4://api.icndb.com/jokes/random")
                     // Here we have a random quote by Chuck Norris, let's unmarshal the JSON data

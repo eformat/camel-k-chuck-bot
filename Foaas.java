@@ -29,21 +29,26 @@ public class Foaas extends RouteBuilder {
         //@formatter:off
         from("telegram:bots/{{token}}")
                 .id("main")
+                //.to("log:DEBUG?showBody=true&showHeaders=true")
                 // convert telegram input to string
                 .convertBodyTo(String.class)
                 // need this in separate class else Random evaluated only once
                 .process(exchange -> {
                     exchange.getIn().setHeader("fMethod", list[new Random().nextInt(list.length)]);
                 })
-                // setup headers to call foaas service
-                .setHeader(Exchange.HTTP_METHOD, constant("GET"))
-                .setHeader(Exchange.HTTP_PATH, simple("${header.fMethod}/${body.toLowerCase()}"))
-                .setHeader("Accept", constant("application/json"))
-                //.to("log:DEBUG?showBody=true&showHeaders=true")
-                // call
-                .to("direct:foaas")
-                .to("direct:telegram")
-                .log("${body}");
+                .choice()
+                    .when(simple("${body.toLowerCase()} contains 'mike'"))
+                        // setup headers to call foaas service
+                        .setHeader(Exchange.HTTP_METHOD, constant("GET"))
+                        .setHeader(Exchange.HTTP_PATH, simple("${header.fMethod}/${body.toLowerCase()}"))
+                        .setHeader("Accept", constant("application/json"))
+                        // call
+                        .to("direct:foaas")
+                        .to("direct:telegram")
+                        .log("${body}")
+                    .otherwise()
+                        // Just log all other messages
+                        .log("Discarded: ${body}");
 
         from("direct:foaas")
                 .id("foaas")
