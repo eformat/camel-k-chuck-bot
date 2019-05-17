@@ -52,7 +52,7 @@ public class Foaas extends RouteBuilder {
         from("direct:foaas")
                 .id("foaas")
                 // timeout if service not available
-                .hystrix().hystrixConfiguration().executionTimeoutInMilliseconds(2000).end()
+                .hystrix().hystrixConfiguration().executionTimeoutInMilliseconds(3000).end()
                     .to("https4://www.foaas.com")
                     // response in json
                     .unmarshal().json(JsonLibrary.Jackson)
