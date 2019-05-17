@@ -4,6 +4,11 @@ import org.apache.camel.component.telegram.TelegramConstants;
 import org.apache.camel.component.telegram.TelegramParseMode;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
+/**
+ * Chuckbot
+ * Integration with Telegram - run with:
+ * kamel run Routes.java -p token=<bot token> --dev
+ */
 public class Routes extends RouteBuilder {
     public void configure() {
 
@@ -26,7 +31,7 @@ public class Routes extends RouteBuilder {
 
         from("direct:chuck")
                 // Let's use a circuit breaker to avoid cascading failures
-                .hystrix().hystrixConfiguration().executionTimeoutInMilliseconds(2000).end()
+                .hystrix().hystrixConfiguration().executionTimeoutInMilliseconds(3000).end()
                     // When a user writes the word 'chuck' on the chat execute the following steps
                     .to("http4://api.icndb.com/jokes/random")
                     // Here we have a random quote by Chuck Norris, let's unmarshal the JSON data

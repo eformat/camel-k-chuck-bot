@@ -13,15 +13,14 @@ import java.util.Random;
  */
 public class Foaas extends RouteBuilder {
 
-
     /**
      * list of method calls
      */
     private static String[] list = {"yoda", "this", "sake", "rtfm", "ratarse", "programmer", "tucker", "question", "no", "horse", "me", "asshole", "awesome", "bag", "because", "bucket", "bye", "cool", "cup", "diabetes", "everyone", "everything", "family", "fascinating", "flying", "fyyff", "give", "immensity", "life", "looking", "maybe", "mornin", "pink", "retard", "ridiculous", "shit", "single", "thanks", "that", "this", "too", "tucker", "what", "zayn", "zero"};
 
-
     /**
      * Camel Routes
+     *
      * @throws Exception
      */
     public void configure() throws Exception {
